@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+
+		<!-- Bootstrap CSS -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+			integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+			crossorigin="anonymous"
+		/>
+
+		<title>Books</title>
+	</head>
+
+	<body>
+		<h1>Books</h1>
+		<form
+			id="searchForm"
+			class="form-inline my-2 my-5 justify-content-center align-items-center"
+		>
+			<input
+				id="input"
+				class="form-control mr-sm-2"
+				type="search"
+				placeholder="Search"
+				aria-label="Search"
+			/>
+			<button
+				class="btn btn-outline-success my-2 my-sm-0"
+				type="submit"
+				id="look"
+				onclick="search()"
+			>
+				Search
+			</button>
+		</form>
+		<section
+			class="row row-cols-sm-1 row-cols-md-3 row-cols-lg-4 books-section"
+		></section>
+
+		<!-- Optional JavaScript; choose one of the two! -->
+
+		<!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+		<script
+			src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+			integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+			crossorigin="anonymous"
+		></script>
+
+		<!-- Option 2: Separate Popper and Bootstrap JS -->
+		<!--
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+    -->
+
+		<script>
+			let booksStorage = [];
+			fetch('https://striveschool-api.herokuapp.com/books')
+				.then((resp) => resp.json())
+				.then((books) => {
+					//booksStorage = books;
+					booksStorage.push(...books);
+					display();
+					changeStyles();
+
+					//addskipBtns();
+					// console.log(booksStorage);
+				});
+
+			const display = function () {
+				console.log('here is: ', booksStorage);
+				booksStorage.forEach((element) => {
+					document.querySelector(
+						'.books-section'
+					).innerHTML += `<div class="col"><div class="card my-2">
+			                 <img src="${element['img']}" class="card-img-top" alt="${
+						element.title
+					}" style="height:550px; object-fit:cover;">
+			                  <div class="card-body">
+			                   <h5 class="card-title">${element.title}</h5>
+			                     <p class="card-text">${element.category}</p>
+			                  </div>
+			                 <ul class="list-group list-group-flush">
+			                  <li class="list-group-item">${'€' + element.price}</li>
+			                  <button type="button" class="btn btn-warning">${'ADD TO CART'}</button>
+			                  </ul>
+			                  </div></div>`;
+				});
+			};
+
+			/* ExERCISE-3*/
+			let boughtBooks = [];
+			const changeStyles = function () {
+				const allBtns = document.getElementsByTagName('button');
+				for (let i = 0; i < allBtns.length; i++) {
+					allBtns[i].onclick = function () {
+						allBtns[i].parentElement.parentElement.style.backgroundColor =
+							'grey';
+						allBtns[
+							i
+						].parentElement.firstElementChild.innerHTML = `<li class="list-group-item">${'ADDED TO CART'}</li>`;
+						console.log(booksStorage[i]);
+						boughtBooks.push(booksStorage[i]); //why not getting pushed?????
+					};
+				}
+				//console.log(boughtBooks);
+			};
+
+			//	const addskipBtns = function () {};
+			//let searchForm = document.querySelector('#searchForm');
+			// searchForm.preventDefault();
+			const search = function () {
+				let inputText = document.querySelector('#input').value.toLowerCase();
+				window.alert(inputText);
+				// bookStorage.forEach((element) => {
+				// 	if (element.title.toLowerCase().includes(inputText)) {
+				// 		document.body.innerHTML += `<div class="col"><div class="card">
+				//              <img src="${element['img']}" class="card-img-top" alt="${
+				// 			element.title
+				// 		}" style="height:550px; object-fit:cover;">
+				//               <div class="card-body">
+				//                <h5 class="card-title">${element.title}</h5>
+				//                  <p class="card-text">${element.category}</p>
+				//               </div>
+				//              <ul class="list-group list-group-flush">
+				//               <li class="list-group-item">${element.price}</li>
+				//               <button type="button" class="btn btn-warning">${'ADD TO CART'}</button>
+				//               </ul>
+				//               </div></div>`;
+				// 	}
+				// });
+			};
+		</script>
+	</body>
+</html>
